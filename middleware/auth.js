@@ -1,10 +1,10 @@
-// On importe jsonwebtoken, une bibliothèque pour créer et vérifier des tokens JWT (JSON Web Tokens)
+// importe jsonwebtoken, une bibliothèque pour créer et vérifier des tokens JWT (JSON Web Tokens)
 const jsonWebToken = require("jsonwebtoken");
 // On charge les variables d'environnement à partir du fichier .env
 require("dotenv").config();
 
-// On récupère la clé secrète pour signer les tokens depuis les variables d'environnement
-const { SECRET_TOKEN } = process.env;
+// récupère la clé secrète pour signer les tokens depuis les variables d'environnement
+const { SECRET_TOKEN } = process.env; 
 
 // Cette fonction est utilisée comme middleware pour protéger les routes nécessitant une authentification
 module.exports = (req, res, next) => {
