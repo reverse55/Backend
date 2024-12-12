@@ -1,14 +1,15 @@
-const Book = require("../models/Book");
+const { error } = require("console");
+const Book = require("../models/Book"); // modéle book 
 const fs = require("fs"); // Utilisé pour manipuler les fichiers, notamment pour supprimer les images
 
 // Créer un livre
 exports.createBook = (req, res, next) => {
-  // On parse les données envoyées par le client
+  // analyser les données envoyées par le client
   const bookObject = JSON.parse(req.body.book);
   console.log("Création d'un nouveau livre");
 
   // Supprimer les champs inutiles comme l'id et l'userId
-  delete bookObject.id;
+  delete bookObject.id; 
   delete bookObject.userId;
 
   // Créer un nouveau livre avec les données fournies et l'URL de l'image
@@ -35,7 +36,7 @@ exports.modifyBook = (req, res, next) => {
       }
     : { ...req.body }; // Sinon, garder les données existantes
 
-  // Supprimer l'userId pour éviter de le modifier
+  // Supprimer userId pour éviter les modifications non autorisées
   delete bookObject.userId;
 
   // Trouver le livre par son ID
@@ -44,7 +45,16 @@ exports.modifyBook = (req, res, next) => {
       // Si le livre n'est pas trouvé, on retourne une erreur
       if (book.userId != req.auth.userId) {
         return res.status(403).json({ message: "Non autorisé à modifier ce livre" });
-      }
+      } else{
+        if(req.file && book.imageUrl) {
+ // Extraire le nom du fichier image du livre
+ const filename = book.imageUrl.split("/images/")[1]; 
+fs.unlink(`images/${filename}`, (error) => {
+  // Supprimer le livre de la base de données
+if(error){console.log("error lors de la suppression d'image")}
+})
+        }
+      } 
 
       // Mettre à jour le livre dans la base de données
       Book.updateOne({ _id: req.params.id }, { ...bookObject, _id: req.params.id })
@@ -65,7 +75,7 @@ exports.deleteBook = (req, res, next) => {
       }
 
       // Extraire le nom du fichier image du livre
-      const filename = book.imageUrl.split("/images/")[1];
+      const filename = book.imageUrl.split("/images/")[1]; 
       
       // Supprimer l'image du système de fichiers
       fs.unlink(`images/${filename}`, () => {
