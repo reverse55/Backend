@@ -1,24 +1,22 @@
 // Importation des modules nécessaires
 const express = require("express"); // Framework pour créer le serveur
 const mongoose = require("mongoose"); // Pour connecter et gérer MongoDB
-const cors = require("cors"); // Gestion des autorisations entre le frontend et le backend
-const path = require("path"); // Manipuler les chemins de fichiers et de répertoires
-// Importation des fichiers de routes
+const cors = require("cors"); // Gestion entre le frontend et le backend
+const path = require("path"); // Manipuler les chemins de fichiers et de répertoires p
 const routesBooks = require("./routes/routes_books"); // Routes pour les livres
 const routesUsers = require("./routes/routes_users"); // Routes pour les utilisateurs
+require("dotenv").config(); // Charger les variables d'environnement
+
+// Connexion à MongoDB
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch((error) => console.error(" Échec de la connexion à MongoDB :"));
 
 // Initialisation de l'application Express
-const app = express();
+const app = express(); 
 
-// Connexion à la base de données MongoDB
-mongoose
-  .connect(
-    "mongodb+srv://hakan:hakan@cluster0.jvws7.mongodb.net/?retryWrites=true&w=majority", // Chaîne de connexion MongoDB
-  )
-  .then(() => console.log("Connexion à MongoDB réussie !")) 
-  .catch(() => console.log("Connexion à MongoDB échouée !")); 
-
-// Middleware pour gérer les données JSON dans les requêtes
+// Middleware pour gérer les données JSON dans les requêtes acdr mad
 app.use(express.json());
 
 // Middleware pour activer CORS (partage des ressources entre frontend et backend)
